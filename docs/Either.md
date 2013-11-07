@@ -93,7 +93,7 @@ public:
 };
 
 template <class L, class R>
-void swap(Either<L, R> &a, Either<L, R> b);
+void swap(Either<L, R> &a, Either<L, R> &b);
 
 
 } // namespace funky
@@ -259,7 +259,7 @@ These are intended to simplify generic code. (They're more awkward for general u
 
 ```C++
 template <class L, class R>
-void swap(Either<L, R> &a, Either<L, R> b);
+void swap(Either<L, R> &a, Either<L, R> &b);
 ```
 
 Swap a with b. If a and b have the same type, `swap(Type&,Type&)` is used unqualified but with std::swap introduced in scope. Otherwise, the default swap is used.
