@@ -8,18 +8,9 @@ using namespace funky;
 
 namespace {
 
-  Either<int, std::unique_ptr<int>> Eint1() {
-    return 1;
-  }
-
-  Either<int, std::unique_ptr<int>> EUptr30() {
-    return std::unique_ptr<int>{new int(30)};
-  }
-
-
   TEST(Either, Basics) {
 
-    Either<int, std::unique_ptr<int>> v1{Eint1()};
+    Either<int, std::unique_ptr<int>> v1{1};
 
     EXPECT_TRUE(v1.isLeft());
 
@@ -28,7 +19,7 @@ namespace {
     EXPECT_NE(nullptr, v1.getLeftPointer());
     EXPECT_EQ(nullptr, v1.getRightPointer());
 
-    v1 = EUptr30();
+    v1 = std::unique_ptr<int>{new int(30)};
 
     EXPECT_TRUE(v1.isRight());
     EXPECT_EQ(30, *v1.right());
