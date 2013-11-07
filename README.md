@@ -1,4 +1,4 @@
-# Funky: An uncommon C++11 utility toolkit.
+# Funky
 
 Funky is a library that contains uncommon utilities for C++11 programmers. Dependancies between different headers are minimized, so it's a take-what-you-need library.
 
