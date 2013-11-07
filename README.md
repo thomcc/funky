@@ -1,28 +1,27 @@
-# Funky: A C++11 utility toolkit.
+# Funky: An uncommon C++11 utility toolkit.
 
-Funky is a functionally inspired library that contains common and uncommon utilities for C++11 programmers. Dependancies between different headers are minimized, so it's a take-what-you-need library.
+Funky is a library that contains uncommon utilities for C++11 programmers. Dependancies between different headers are minimized, so it's a take-what-you-need library.
 
 Funky provides the following modules.
 
-- `funky::Either<Left, Right>`, a haskell-inspired Either type (in `include/funky/Either.hh`).
-
+- `funky::Either<Left, Right>`, a haskell-inspired Either type: [source](include/funky/Either.hh), [docs](docs/Either.md).
 
 ## Requirements
-Funky has no dependancies on any librarys other than a C++11 compliant standard library.
+Funky has no dependancies on any librarys other than a C++11 compliant compiler and standard library.
 
-An effort has been made to avoid breaking things for MSVC, but I don't develop on windows regularly so submit a pull request if something doesn't work in the most recent version of MSVC (at the time of writing, 2013RC).
+
+## Documentation
+Funky has extensive documentation (in Markdown format) for all its modules in the docs folder.
+
 
 ## Usage
-The best way to use funky is to copy the files you want into your project. Currently funky is a header-only library.
+The best way to use funky is to copy the files you want into your project. Currently funky is a header-only library, but this may change in the future.
 
-You can run the tests by using `make run-tests`.
+You can run the tests by using `make run-tests`. This is the default target for the makefile, so just `make` will work too.
 
-## Funky documentation
-For now, see the header files.  Lines starting with `///` are documentation comments. Eventually I'll use doxygen, but I'm not familiar with it enough yet.
+## License
 
-## License.
-
-Funky is distributed under the terms of the Boost Software License.  See below or in the [license file](LICENSE.txt) for details.
+Funky is distributed under the terms of the Boost Software License. See below, or in the [license file](LICENSE.txt) for details.
 
     Copyright (c) 2013 Thom Chiovoloni.
 

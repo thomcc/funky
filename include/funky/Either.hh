@@ -6,6 +6,7 @@
 
 #include <type_traits>
 #include <utility>
+#include <cassert>
 
 namespace funky {
 
@@ -18,11 +19,14 @@ namespace funky {
   ///
   /// Caveats:
   /// Left and Right must be distinct types and neither may be a reference type.
+  /// If you need to use a reference type, wrapping in a std::reference_wrapper \
+  /// is probably your best bet.
 
   /// pass these to the Either constructor to construct a Left/Right either via
   /// emplacement.
-  struct RightTag {};
-  struct LeftTag {};
+
+  enum EmplaceRightTag { EmplaceRight };
+  enum EmplaceLeftTag { EmplaceLeft };
 
   template <class LeftT, class RightT>
   class Either {
@@ -32,12 +36,15 @@ namespace funky {
 
     static_assert(!std::is_reference<LeftT>::value &&
                   !std::is_reference<RightT>::value,
-                  "Either may not be used with reference types");
+                  "Either may not be used with reference types "
+                  "(you may want to use std::reference_wrapper)");
 
     template <class T>
     struct isLeftOrRight : public std::integral_constant<bool
     , std::is_same<T, LeftT>::value || std::is_same<T, RightT>::value
     > {};
+
+
 
   public:
 
@@ -62,13 +69,13 @@ namespace funky {
     }
 
     template <class... Args>
-    Either(LeftTag, Args&&... args) {
+    Either(EmplaceLeftTag, Args&&... args) {
       construct<LeftT>(std::forward<Args>(args)...);
       assert(isLeft());
     }
 
     template <class... Args>
-    Either(RightTag, Args&&... args) {
+    Either(EmplaceRightTag, Args&&... args) {
       construct<RightT>(std::forward<Args>(args)...);
       assert(isRight());
     }
@@ -223,6 +230,22 @@ namespace funky {
     template <class T> T const &get() const & { assert(is<T>()); return *rawGetPtr<T>(); }
     template <class T> T      &&get()      && { assert(is<T>()); return std::move(*rawGetPtr<T>()); }
 
+
+
+    /// either(leftfn, rightfn):
+    /// if we're a left, call leftfn(left()),
+    /// otherwise call rightfn(right()).
+    template <class LeftFn, class RightFn>
+    auto either(LeftFn lf, RightFn rf) const -> decltype(isRight() ? rf(right()) : lf(left())) {
+      return isRight() ? rf(right()) : lf(left());
+    }
+
+    /// as above, but non-const.
+    template <class LeftFn, class RightFn>
+    auto either(LeftFn lf, RightFn rf) -> decltype(isRight() ? rf(right()) : lf(left())) {
+      return isRight() ? rf(right()) : lf(left());
+    }
+
   private:
 
     // storage type. If this is changed (e.g. if std::aligned_union isn't well supported)
@@ -254,9 +277,18 @@ namespace funky {
   };
 
 
-
-
-
+  template <class L, class R>
+  void swap(Either<L, R> &a, Either<L, R> &b) {
+   if (a.isLeft() && b.isLeft()) {
+     using std::swap;
+     swap(a.left(), b.left());
+   } else if (a.isRight() && b.isRight()) {
+     using std::swap;
+     swap(a.right(), b.right());
+   } else {
+     std::swap(a, b);
+   }
+  }
 
 }
 
