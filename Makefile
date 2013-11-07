@@ -42,6 +42,14 @@ CXXFLAGS += -I${Inc} -I${Test}
 # for gtest
 CXXFLAGS += -Wno-missing-field-initializers
 
+# generate and use make dependancy files
+CXXFLAGS += -MMD
+
+allObjects := ${gtestObjects} ${libObjects} ${testObjects}
+
+-include ${allObjects:.o=.d}
+
+
 .PHONY: all
 all: run-tests
 
